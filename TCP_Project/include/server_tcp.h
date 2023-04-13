@@ -17,9 +17,10 @@ typedef struct server {
     int addrlen;
     int client_sockets[MAX_CLIENTS];
     int max_clients;
+    int database;//if database 1 else 0
 } server_t;
 
-int init_server(server_t* server, int port);
+int init_server(server_t* server, int port,int database);
 void handle_client_connections(server_t* server);
 void close_server(server_t* server);
 

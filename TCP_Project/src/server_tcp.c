@@ -1,6 +1,6 @@
 #include "server_tcp.h"
 
-int init_server(server_t *server, int port)
+int init_server(server_t *server, int port,int database)
 {
     // Crear socket del servidor
     if ((server->server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -14,6 +14,7 @@ int init_server(server_t *server, int port)
     server->address.sin_addr.s_addr = INADDR_ANY;
     server->address.sin_port = htons(port);
     server->addrlen = sizeof(server->address);
+    server->database;
 
     // Asociar el socket del servidor a la dirección y puerto
     if (bind(server->server_fd, (struct sockaddr *)&server->address, sizeof(server->address)) < 0)
@@ -36,7 +37,7 @@ int init_server(server_t *server, int port)
     }
     server->max_clients = MAX_CLIENTS;
 
-    printf("Servidor iniciado en el puerto %d\n", port);
+    printf("Servidor iniciado en el puerto %d\n Salvando em banco de dados %d\n", port,database);
 
     return 0;
 }
