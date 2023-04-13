@@ -18,8 +18,8 @@ int connect_to_server(client_t* client, const char* ip, int port) {
     memset(&(client->address), 0, sizeof(client->address));
     client->address.sin_family = AF_INET;
     client->address.sin_port = htons(port);
-
-    if (inet_pton(AF_INET, ip, &(client->address.sin_addr)) <= 0) {
+    //inet_pton(AF_INET, ip, &(client->address.sin_addr)) <= 0
+    if (inet_ntop(AF_INET, &(client->address.sin_addr), ip, strlen(ip))) {//error
         perror("invalid address / address not supported");
         return -1;
     }
