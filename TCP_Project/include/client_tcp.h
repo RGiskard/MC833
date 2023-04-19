@@ -19,5 +19,5 @@ int connect_to_server(client_t* client, const char* ip, int port);
 void disconnect_from_server(client_t* client);
 int send_message(client_t* client, const char* message);
 int receive_message(client_t* client, char* buffer, int buffer_size);
-
+int upload_video(client_t* client);
 #endif

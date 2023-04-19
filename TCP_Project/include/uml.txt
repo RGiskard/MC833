@@ -1,0 +1,28 @@
++---------------------------------------------------+
+|                       client                      |
++---------------------------------------------------+
+| - sockfd: int                                     |
+| - address: sockaddr_in                            |
+| - addrlen: int                                    |
++---------------------------------------------------+
+| + connect_to_server(ip: const char*, port: int): int|
+| + disconnect_from_server(): void                  |
+| + send_message(message: const char*): int          |
+| + receive_message(buffer: char*, buffer_size: int): int|
+| + upload_video(): int                             |
++---------------------------------------------------+
+
++---------------------------------------------------+
+|                       server                      |
++---------------------------------------------------+
+| - server_fd: int                                  |
+| - address: sockaddr_in                            |
+| - addrlen: int                                    |
+| - client_sockets: int[MAX_CLIENTS]                |
+| - max_clients: int                                |
+| - database: int                                   |
++---------------------------------------------------+
+| + init_server(port: int, database: int): int       |
+| + handle_client_connections(): void               |
+| + close_server(): void                            |
++---------------------------------------------------+

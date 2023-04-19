@@ -19,10 +19,12 @@ int connect_to_server(client_t* client, const char* ip, int port) {
     client->address.sin_family = AF_INET;
     client->address.sin_port = htons(port);
     //inet_pton(AF_INET, ip, &(client->address.sin_addr)) <= 0
-    if (inet_ntop(AF_INET, &(client->address.sin_addr), ip, strlen(ip))) {//error
+    printf("Caracter: %s\n", client->address.sin_addr);
+
+    /*if (inet_ntop(AF_INET, &(client->address.sin_addr), ip, strlen(ip))) {//error
         perror("invalid address / address not supported");
         return -1;
-    }
+    }*/
 
     if (connect(sockfd, (struct sockaddr*)&(client->address), sizeof(client->address)) == -1) {
         perror("connection failed");
@@ -55,4 +57,38 @@ int receive_message(client_t* client, char* buffer, int buffer_size) {
     }
     buffer[bytes_received] = '\0';
     return bytes_received;
+}
+int upload_video(client_t* client){
+    // Lógica para cargar el video al servidor
+    // Aquí se puede implementar la lógica necesaria para cargar el video
+    // al servidor. Esto puede incluir la apertura del archivo de video,
+    // la lectura de datos del archivo, y el envío de los datos al servidor
+    // a través del socket utilizando la función send_message() u otras
+    // funciones de manejo de sockets.
+
+    // Ejemplo de implementación:
+    // Abrir el archivo de video
+    FILE *fp = fopen("video.mp4", "rb");
+    if (fp == NULL) {
+        perror("Error al abrir el archivo de video");
+        return -1;
+    }
+
+    // Leer y enviar los datos del archivo al servidor en bloques
+    char buffer[MAX_MESSAGE_LENGTH];
+    int bytes_read;
+    while ((bytes_read = fread(buffer, 1, sizeof(buffer), fp)) > 0) {
+        if (send_message(&client, buffer) < 0) {
+            perror("Error al enviar datos del video al servidor");
+            fclose(fp);
+            return -1;
+        }
+    }
+
+    // Cerrar el archivo de video
+    fclose(fp);
+
+    // Lógica adicional, si es necesaria
+
+    return 0;
 }
