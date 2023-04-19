@@ -2,43 +2,42 @@
 
 int init_server(server_t *server, int port,int database)
 {
-    // Crear socket del servidor
+    // Criar o socket do servidor
     if ((server->server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {
         perror("Error al crear el socket del servidor");
         return -1;
     }
 
-    // Configurar dirección y puerto del servidor
+    // Configurar endereço e porta do servidor
     server->address.sin_family = AF_INET;
     server->address.sin_addr.s_addr = INADDR_ANY;
     server->address.sin_port = htons(port);
     server->addrlen = sizeof(server->address);
     server->database;
 
-    // Asociar el socket del servidor a la dirección y puerto
+    // Associar o socket do servidor ao endereço e porta
     if (bind(server->server_fd, (struct sockaddr *)&server->address, sizeof(server->address)) < 0)
     {
-        perror("Error al asociar el socket del servidor a la dirección y puerto");
+        perror("Error ao associar o socket do servidor ao endereço e porta");
         return -1;
     }
 
-    // Escuchar conexiones entrantes
+    // Escutar conexões entrantes.
     if (listen(server->server_fd, 3) < 0)
     {
-        perror("Error al escuchar conexiones entrantes");
+        perror("Erro ao escutar conexões entrantes.");
         return -1;
     }
 
-    // Inicializar el arreglo de sockets de clientes
+    // Inicializar o array de sockets de clientes.
     for (int i = 0; i < MAX_CLIENTS; i++)
     {
         server->client_sockets[i] = 0;
     }
     server->max_clients = MAX_CLIENTS;
 
-    printf("Servidor iniciado en el puerto %d\n Salvando em banco de dados %d\n", port,database);
-
+    printf("Servidor iniciado na porta %d\n Salvando em banco de dados %d\n", port, database);
     return 0;
 }
 
@@ -49,29 +48,29 @@ void handle_client_connections(server_t *server)
     struct sockaddr_in client_address;
     char buffer[1024] = {0};
 
-    // Limpiar el set de file descriptors
+    // Limpar o conjunto de descritores de arquivo
     FD_ZERO(&readfds);
 
-    // Agregar el socket del servidor al set
+    // Adicionar o descritor de arquivo do servidor ao conjunto
     FD_SET(server->server_fd, &readfds);
     max_sd = server->server_fd;
 
     while (1)
     {
-        // Esperar por actividad en alguno de los sockets
+        // Aguardar por atividade em algum dos sockets
         activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
 
         if ((activity < 0) && (errno != EINTR))
         {
-            perror("Error en select");
+            perror("Error on select");
         }
 
-        // Si hay actividad en el socket del servidor, es una nueva conexión entrante
+// Se houver atividade no socket do servidor, é uma nova conexão de entrada
         if (FD_ISSET(server->server_fd, &readfds))
         {
             if ((new_socket = accept(server->server_fd, (struct sockaddr *)&client_address, (socklen_t *)&server->addrlen)) < 0)
             {
-                perror("Error al aceptar nueva conexión");
+                perror("Erro ao aceitar nova conexão");
                 continue;
             }
 
@@ -146,7 +145,7 @@ void handle_client_connections(server_t *server)
                         {
                             // El cliente ha cerrado la conexión, eliminar el socket del arreglo de clientes
                             getpeername(sd, (struct sockaddr *)&client_address, (socklen_t *)&server->addrlen);
-                            printf("Host desconectado, dirección: %s, puerto: %d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+                            printf("Host desconectado, endereco: %s, port: %d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
                             close(sd);
                             server->client_sockets[i] = 0;
                         }
@@ -155,7 +154,7 @@ void handle_client_connections(server_t *server)
                             // Procesar el mensaje recibido
                             buffer[valread] = '\0';
                             printf("Mensaje recibido: %s\n", buffer);
-                            // Aquí puedes implementar la lógica de tu aplicación para procesar el mensaje
+                            // Aqui você pode implementar a lógica da sua aplicação para processar a mensagem
                         }
                     }
                 }
