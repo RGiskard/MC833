@@ -89,23 +89,23 @@ void handle_client_connections(server_t *server)
                 }
             }
 
-            // Si el arreglo de sockets de clientes está lleno
+            // Se o array de sockets de clientes estiver cheio
             if (i == server->max_clients)
             {
                 printf("Se alcanzó el número máximo de clientes. Rechazando nueva conexión.\n");
                 close(new_socket);
             }
 
-            // Agregar el nuevo socket al set de file descriptors
+            // Adicionar o novo socket ao conjunto de descritores de arquivo (file descriptors)
             FD_SET(new_socket, &readfds);
-            // Actualizar el descriptor de archivo máximo
+            // Atualizar o descritor de arquivo máximo
             if (new_socket > max_sd)
             {
                 max_sd = new_socket;
             }
         }
 
-        // Recorrer los sockets de clientes para ver si hay actividad en alguno
+        // Percorrer os sockets dos clientes para verificar se há atividade em algum deles
         int i, sd;
         for (i = 0; i < server->max_clients; i++)
         {
@@ -113,37 +113,37 @@ void handle_client_connections(server_t *server)
 
             if (FD_ISSET(sd, &readfds))
             {
-                // Si hay actividad en el socket, es una solicitud de datos
+                // Se houver atividade no socket, é uma solicitação de dados
                 if ((valread = read(sd, buffer, 1024)) == 0)
                 {
-                    // El cliente cerró la conexión
+                    // O client fecho a conexão
                     printf("Cliente desconectado, socket fd es %d, dirección es: %s, puerto: %d\n", sd, inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
-                    // Cerrar el socket y quitarlo del set de file descriptors
+                    // Fechar o socket e removê-lo do conjunto de descritores de arquivo (file descriptors)
                     close(sd);
                     FD_CLR(sd, &readfds);
                     server->client_sockets[i] = 0;
                 }
                 else
                 {
-                    // Mostrar el mensaje recibido
+                    // Show message
                     printf("Mensaje recibido: %s\n", buffer);
-                    // Enviar una respuesta al cliente
+                    // Enviar uma resposta ao cliente
                     send(sd, buffer, strlen(buffer), 0);
-                    // Limpiar el buffer
+                    // clean the buffer
                     memset;
                 }
 
-                // Revisar todas las conexiones de clientes en busca de actividad
+               // Verificar todas as conexões dos clientes em busca de atividade
                 for (int i = 0; i < server->max_clients; i++)
                 {
                     sd = server->client_sockets[i];
 
                     if (FD_ISSET(sd, &readfds))
                     {
-                        // Si hay actividad en el socket, es un mensaje entrante
+                        // Se houver atividade no socket, é uma mensagem de entrada
                         if ((valread = read(sd, buffer, 1024)) == 0)
                         {
-                            // El cliente ha cerrado la conexión, eliminar el socket del arreglo de clientes
+                            // O cliente fechou a conexão, remover o socket da matriz de clientes
                             getpeername(sd, (struct sockaddr *)&client_address, (socklen_t *)&server->addrlen);
                             printf("Host desconectado, endereco: %s, port: %d\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
                             close(sd);
@@ -151,7 +151,7 @@ void handle_client_connections(server_t *server)
                         }
                         else
                         {
-                            // Procesar el mensaje recibido
+                            // Processar a mensagem recebida
                             buffer[valread] = '\0';
                             printf("Mensaje recibido: %s\n", buffer);
                             // Aqui você pode implementar a lógica da sua aplicação para processar a mensagem
@@ -165,7 +165,7 @@ void handle_client_connections(server_t *server)
 
 void close_server(server_t *server)
 {
-    // Cerrar todos los sockets de clientes
+    // Fechar todos os sockets dos clientes
     for (int i = 0; i < server->max_clients; i++)
     {
         int client_socket = server->client_sockets[i];
@@ -175,7 +175,7 @@ void close_server(server_t *server)
         }
     }
 
-    // Cerrar el socket del servidor
+    // Fechar o socket do servidor
     close(server->server_fd);
 
     printf("Servidor cerrado\n");
