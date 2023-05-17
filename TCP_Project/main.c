@@ -9,28 +9,28 @@ int run_server() {
     int database = read_config_file();
     printf("database connect = %d\n", conect());
     desconect();
-    printf("Valor de database: %d\n", database);
+    printf("Value of database: %d\n", database);
     
     server_t server;
 
-    // Inicializar el servidor en el puerto 8080
+    // Inicializar o servidor na porta 8080
     if (init_server(&server, 8080,database) < 0) {
-        printf("Error al inicializar el servidor\n");
+        printf("Error initializing the server\n");
         exit(1);
     }
-    // Obtener el nombre del host y la dirección IP
+    // Obter o nome do host e o endereço IP
     char hostname[256];
     if (gethostname(hostname, sizeof(hostname)) != 0) {
-        perror("Error al obtener el nombre del host");
+        perror("Error retrieving the hostname");
         exit(1);
     }
 
     printf(hostname);
 
-    // Escuchar conexiones entrantes y manejarlas
+    // Ouvir conexões 
     handle_client_connections(&server);
 
-    // Cerrar el servidor
+    // fechar o server
     close_server(&server);
     return 0;
 }
@@ -43,38 +43,38 @@ int run_client() {
     char ip[20];
     int port;
     
-    // Pedir al usuario que ingrese la dirección IP y el puerto del servidor
-    printf("Ingrese la dirección IP del servidor: ");
+    // Pedir ao usuário que digite o endereço IP e a porta do servidor
+    printf("Please enter the server's IP address: ");
     fgets(ip, 20, stdin);
-    printf("Ingrese el puerto del servidor: ");
+    printf("Please enter the server's port: ");
     scanf("%d", &port);
-    getchar(); // Limpiar el buffer de entrada
+    getchar(); // Limpar o buffer 
     
-    // Conectar al servidor
+    // Conectar ao servidor
     if (connect_to_server(&client, ip, port) < 0) {
-        printf("No se pudo conectar al servidor\n");
+        printf("Failed to connect to the server\n");
         return -1;
     }
 
-    // Enviar un mensaje al servidor
-    printf("Ingrese el mensaje a enviar: ");
+    // Enviar um mensagem ao servidor
+    printf("Please enter the message to send: ");
     fgets(buffer, max_buffer_size, stdin);
     if (send_message(&client, buffer) < 0) {
-        printf("No se pudo enviar el mensaje al servidor\n");
+        printf("Failed to send the message to the server\n");
         disconnect_from_server(&client);
         return -1;
     }
 
-    // Recibir la respuesta del servidor
+    // Receber a resposta do servidor
     if (receive_message(&client, buffer, max_buffer_size) < 0) {
-        printf("No se pudo recibir la respuesta del servidor\n");
+        printf("Failed to receive the response from the server\n");
         disconnect_from_server(&client);
         return -1;
     }
 
-    printf("Respuesta del servidor: %s\n", buffer);
+    printf("Server response: %s\n", buffer);
 
-    // Desconectar del servidor
+    // Desconectar do servidor
     disconnect_from_server(&client);
 
     return 0;
@@ -83,7 +83,7 @@ int run_client() {
 
 int main(int argc, char const *argv[]) {
     if (argc < 2) {
-        printf("Uso: %s <CLIENT|SERVER>\n", argv[0]);
+        printf("Usage: %s <CLIENT|SERVER>\n", argv[0]);
         return -1;
     }
 
@@ -92,7 +92,7 @@ int main(int argc, char const *argv[]) {
     } else if (strcmp(argv[1], "SERVER") == 0) {
         return run_server();
     } else {
-        printf("Uso: %s <CLIENT|SERVER>\n", argv[0]);
+        printf("Usage: %s <CLIENT|SERVER>\n", argv[0]);
         return -1;
     }
 }
