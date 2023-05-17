@@ -59,15 +59,14 @@ int receive_message(client_t* client, char* buffer, int buffer_size) {
     return bytes_received;
 }
 int upload_video(client_t* client){
-    // Lógica para cargar el video al servidor
-    // Aquí se puede implementar la lógica necesaria para cargar el video
-    // al servidor. Esto puede incluir la apertura del archivo de video,
-    // la lectura de datos del archivo, y el envío de los datos al servidor
-    // a través del socket utilizando la función send_message() u otras
-    // funciones de manejo de sockets.
-
-    // Ejemplo de implementación:
-    // Abrir el archivo de video
+    // Lógica para carregar o vídeo no servidor
+    // Aqui pode ser implementada a lógica necessária para carregar o vídeo
+    // no servidor. Isso pode incluir a abertura do arquivo de vídeo,
+    // a leitura dos dados do arquivo e o envio dos dados para o servidor
+    // através do socket utilizando a função send_message() ou outras
+    // funções de manipulação de sockets.
+    // Exemplo de implementação:
+    // Abrir o arquivo de vídeo
     FILE *fp = fopen("video.mp4", "rb");
     if (fp == NULL) {
         perror("Error al abrir el archivo de video");
@@ -85,10 +84,11 @@ int upload_video(client_t* client){
         }
     }
 
-    // Cerrar el archivo de video
+    // fechar o arquivo
     fclose(fp);
 
-    // Lógica adicional, si es necesaria
+    
+    // Lógica adicional, se precissar
 
     return 0;
 }
